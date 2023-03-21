@@ -1,6 +1,6 @@
 name: test
 
-on: workflow_dispatch
+on: [push, pull_request]
 
 env:
   FOUNDRY_PROFILE: ci
@@ -17,18 +17,22 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Install dev dependencies
+        run: npm install
+
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
         with:
           version: nightly
 
-      - name: Run Forge build
-        run: |
-          forge --version
-          forge build --sizes
-        id: build
+      - name: Lint
+        run: npm run lint
 
-      - name: Run Forge tests
-        run: |
-          forge test -vvv
-        id: test
+      - name: Install forge dependencies
+        run: forge install
+      
+      - name: Build
+        run: forge build
+      
+      - name: Test
+        run: forge test
