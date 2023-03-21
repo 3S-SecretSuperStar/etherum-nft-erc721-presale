@@ -104,7 +104,7 @@ contract NFTBitmapPresale is ERC721, IERC2981 {
     /**
      * @notice Computes the merkle root from the given `_allowList`.
      * @param _allowList The array of allowed addresses to compute the merkle root from.
-     * @return The computed merkle root.
+     * @return computedHashThe computed merkle root.
      */
     function setMerkleRoot(address[] memory _allowList) private pure returns (bytes32) {
         bytes32 computedHash;
@@ -123,17 +123,17 @@ contract NFTBitmapPresale is ERC721, IERC2981 {
      * @notice Computes the hash of a pair of bytes32 values.
      * @param a The first bytes32 value.
      * @param b The second bytes32 value.
-     * @return The hash of the pair of bytes32 values.
+     * @return hash The hash of the pair of bytes32 values.
      */
     function hashPair(bytes32 a, bytes32 b) private pure returns (bytes32) {
         return a < b ? efficientHash(a, b) : efficientHash(b, a);
     }
-
+    
     /**
      * @notice Computes the keccak256 hash of two bytes32 values using memory-safe assembly.
      * @param a The first bytes32 value.
      * @param b The second bytes32 value.
-     * @return The keccak256 hash of the two bytes32 values.
+     * @return value The keccak256 hash of the two bytes32 values.
      */
     function efficientHash(bytes32 a, bytes32 b) private pure returns (bytes32 value) {
         /// @solidity memory-safe-assembly

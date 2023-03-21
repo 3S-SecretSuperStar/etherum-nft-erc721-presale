@@ -115,20 +115,20 @@ contract NFTMappingPresale is ERC721, IERC2981 {
     }
 
     /**
-     * @dev Computes the hash of a pair of bytes32 values.
+     * @notice Computes the hash of a pair of bytes32 values.
      * @param a The first bytes32 value.
      * @param b The second bytes32 value.
-     * @return The hash of the pair of bytes32 values.
+     * @return hash The hash of the pair of bytes32 values.
      */
     function hashPair(bytes32 a, bytes32 b) private pure returns (bytes32) {
         return a < b ? efficientHash(a, b) : efficientHash(b, a);
     }
-
+    
     /**
-     * @dev Computes the keccak256 hash of two bytes32 values using memory-safe assembly.
+     * @notice Computes the keccak256 hash of two bytes32 values using memory-safe assembly.
      * @param a The first bytes32 value.
      * @param b The second bytes32 value.
-     * @return The keccak256 hash of the two bytes32 values.
+     * @return value The keccak256 hash of the two bytes32 values.
      */
     function efficientHash(bytes32 a, bytes32 b) private pure returns (bytes32 value) {
         /// @solidity memory-safe-assembly

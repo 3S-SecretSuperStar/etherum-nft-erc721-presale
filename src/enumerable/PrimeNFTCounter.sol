@@ -24,7 +24,7 @@ contract PrimeNFTCounter {
      * @param user The address of the user for whom the count of prime numbered tokens is to be returned.
      * @return primeCount The number of prime numbered tokens owned by the specified address.
      */
-    function getPrimeCount(address user) public returns (uint256) {
+    function getPrimeCount(address user) public view returns (uint256) {
         uint userAmount = nft.balanceOf(user);
         uint256 primeCount;
         for (uint256 i = 0; i < userAmount; i++) {
