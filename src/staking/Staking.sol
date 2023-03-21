@@ -10,7 +10,7 @@ import "./StakingToken.sol";
  * @dev This contract allows users to stake ERC721 tokens and receive rewards in the form of a custom ERC20 token.
  */
 contract Staking {
-    uint256 constant reward = 10;
+    uint256 constant REWARD = 10;
     struct OwnerInfo {
         uint256 depositTime;
         address owner;
@@ -55,7 +55,7 @@ contract Staking {
         require(originalOwner[tokenId].owner == msg.sender, "NOT OWNER");
         require(!originalOwner[tokenId].empty, "NO INFORMATION AVAILABLE");
         require((block.timestamp - originalOwner[tokenId].depositTime) >= 1 days, "TIME INTERVAL HAS NOT BEEN REACHED");
-        stakingToken.mint(msg.sender, reward);
+        stakingToken.mint(msg.sender, REWARD);
         originalOwner[tokenId].depositTime = block.timestamp;
     }
 
