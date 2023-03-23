@@ -16,8 +16,8 @@ contract NFTBitmapPresale is ERC721, IERC2981 {
     using BitMaps for BitMaps.BitMap;
 
     bytes32 public merkleRoot;
-    uint256 public constant PRICE = 10 ether;
-    uint256 public constant DISCOUNT_PRICE = 8 ether;
+    uint256 public constant PRICE = 1000 wei;
+    uint256 public constant DISCOUNT_PRICE = 800 wei;
     uint256 public constant ROYALTY_BPS = 250;
     address[] public allowList;
     BitMaps.BitMap tickets;
@@ -35,10 +35,10 @@ contract NFTBitmapPresale is ERC721, IERC2981 {
      * @notice Sets the presale allow list and computes the Merkle root.
      * @param _allowList The list of addresses allowed to buy NFTs with presale discount.
      */
-    function setPreSaleAllowList(address[] memory _allowList) public {
+    function setPreSaleAllowList(address[] memory _allowList, bytes32 _merkleRoot) public {
         require(allowList.length == 0, "PRESALE ALREADY SET");
         allowList = _allowList;
-        merkleRoot = setMerkleRoot(_allowList);
+        setMerkleRoot(_merkleRoot);
     }
 
     /**
@@ -58,8 +58,7 @@ contract NFTBitmapPresale is ERC721, IERC2981 {
      * @param id The ID of the token to buy.
      */
     function buyTokenDiscount(bytes32[] calldata merkleProof, uint256 id) public payable {
-        require(verifyDiscount(merkleProof), "ADDRESS NOT ALLOWED TO BUY ON PRESALE");
-        require(allowList[id] == msg.sender, "ID NOT ASSIGNED IN ALLOWLIST");
+        require(verifyDiscount(merkleProof, id), "ADDRESS NOT ALLOWED TO BUY ON PRESALE");
         require(tickets.get(id), "TOKEN NOT AVAILABLE");
         require(msg.value >= DISCOUNT_PRICE, "NOT ENOUGH VALUE TO BUY NFT");
         _mint(msg.sender, id);
@@ -93,54 +92,28 @@ contract NFTBitmapPresale is ERC721, IERC2981 {
     }
 
     /**
-     * @notice Verifies if the caller's address with the given `merkleProof` are valid given the `merkleRoot`.
+     * @dev Base URI for computing {tokenURI}. If set, the resulting URI for each
+     * token will be the concatenation of the `baseURI` and the `tokenId`. Empty
+     * by default, can be overridden in child contracts.
+     */
+    function _baseURI() internal view override returns (string memory) {
+        return "ipfs://QmcjkoCfLrQNdatBxnednD5zfv1UHmuhf1zTneAD6A3L3Z/";
+    }
+    /**
+     * @notice Verifies if the caller's address with the given `merkleProof` and the id belong to the `merkleRoot`.
      * @param merkleProof The merkle proof to verify.
+     * @param id Token Id corresponding to the place in the allowList array.
      * @return A boolean value representing if the discount is verified or not.
      */
-    function verifyDiscount(bytes32[] calldata merkleProof) private view returns (bool) {
-        return MerkleProof.verify(merkleProof, merkleRoot, keccak256(abi.encodePacked(msg.sender)));
-    }
-
-    /**
-     * @notice Computes the merkle root from the given `_allowList`.
-     * @param _allowList The array of allowed addresses to compute the merkle root from.
-     * @return computedHashThe computed merkle root.
-     */
-    function setMerkleRoot(address[] memory _allowList) private pure returns (bytes32) {
-        bytes32 computedHash;
-        for (uint256 i = 0; i < _allowList.length; i++) {
-            if (computedHash == bytes32(0)) {
-                computedHash = keccak256(abi.encodePacked(_allowList[i]));
-                i++;
-            }
-
-            computedHash = hashPair(computedHash, keccak256(abi.encodePacked(_allowList[i])));
-        }
-        return computedHash;
-    }
-
-    /**
-     * @notice Computes the hash of a pair of bytes32 values.
-     * @param a The first bytes32 value.
-     * @param b The second bytes32 value.
-     * @return hash The hash of the pair of bytes32 values.
-     */
-    function hashPair(bytes32 a, bytes32 b) private pure returns (bytes32) {
-        return a < b ? efficientHash(a, b) : efficientHash(b, a);
+    function verifyDiscount(bytes32[] calldata merkleProof, uint256 id) private view returns (bool) {
+        return MerkleProof.verify(merkleProof, merkleRoot, keccak256(abi.encodePacked(msg.sender,id)));
     }
     
     /**
-     * @notice Computes the keccak256 hash of two bytes32 values using memory-safe assembly.
-     * @param a The first bytes32 value.
-     * @param b The second bytes32 value.
-     * @return value The keccak256 hash of the two bytes32 values.
+     * @notice Adds Merkle root to contract.
+     * @param _merkleRoot The merkle rott to add.
      */
-    function efficientHash(bytes32 a, bytes32 b) private pure returns (bytes32 value) {
-        /// @solidity memory-safe-assembly
-        assembly {
-            mstore(0x00, a)
-            mstore(0x20, b)
-            value := keccak256(0x00, 0x40)
-        }
+    function setMerkleRoot(bytes32 _merkleRoot) private {
+        merkleRoot = _merkleRoot;
     }
 }
