@@ -11,6 +11,7 @@ contract StackingNFTTest is Test {
     StakingToken stakingToken;
     Staking staking;
     address bob = address(1);
+    address alice = address(2);
 
     function setUp() public {
         nft = new StakingNFT("StackingNFT", "SNFT");
@@ -24,6 +25,14 @@ contract StackingNFTTest is Test {
         stakingToken = StakingToken(staking.getTokenAddress());
         vm.expectRevert("NOT OWNER");
         stakingToken.mint(bob, 10);
+    }
+
+    function testFakeNFTStake() public {
+        StakingNFT nftFake = new StakingNFT("FakeStackingNFT", "FSNFT");
+        vm.startPrank(bob);
+        nftFake.mint();
+        vm.expectRevert("NOT NFT CONTRACT");
+        nftFake.safeTransferFrom(bob, address(staking), 0);
     }
 
     /// @notice Test bob correctly collects 10 tokens after depositing his NFT.
@@ -62,6 +71,15 @@ contract StackingNFTTest is Test {
         staking.collectTokens(0);
     }
 
+    function testNotOwnerCollectT() public {
+        vm.prank(bob);
+        nft.safeTransferFrom(bob, address(staking), 0);
+        vm.warp(block.timestamp + 1 days);
+        vm.startPrank(alice);
+        vm.expectRevert("NOT OWNER");
+        staking.collectTokens(0);
+    }
+
     /// @notice Test that bob is able to withdraw succesfully his nft.
     function testWithdraw() public {
         vm.prank(bob);
@@ -74,4 +92,24 @@ contract StackingNFTTest is Test {
         assertEq(stakingToken.balanceOf(bob), 10);
         assertEq(nft.ownerOf(0), bob);
     }
+
+    function testStakeAlreadyWithdrawn() public {
+        vm.prank(bob);
+        nft.safeTransferFrom(bob, address(staking), 0);
+        vm.warp(block.timestamp + 1 days);
+        vm.startPrank(bob);
+        staking.withDrawNft(0);
+        vm.expectRevert("NO INFORMATION AVAILABLE");
+        staking.collectTokens(0);
+    }
+
+    function testNotOwnerWithdraw() public {
+        vm.prank(bob);
+        nft.safeTransferFrom(bob, address(staking), 0);
+        vm.warp(block.timestamp + 1 days);
+        vm.startPrank(alice);
+        vm.expectRevert("NOT OWNER");
+        staking.withDrawNft(0);
+    }
+
 }
