@@ -16,7 +16,7 @@ contract NFTBitmapPresale is ERC721, IERC2981 {
     using BitMaps for BitMaps.BitMap;
 
     bytes32 public merkleRoot;
-    uint256 public constant PRICE = 1000 wei;
+    uint256 public constant PRICE = 1_000 wei;
     uint256 public constant DISCOUNT_PRICE = 800 wei;
     uint256 public constant ROYALTY_BPS = 250;
     address[] public allowList;
