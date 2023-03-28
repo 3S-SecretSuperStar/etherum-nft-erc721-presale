@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.10;
+pragma solidity 0.8.13;
 
 import "forge-std/Test.sol";
 import "../src/staking/Staking.sol";
@@ -19,6 +19,13 @@ contract StackingNFTTest is Test {
         nft.mint();
     }
 
+    function testNonTokenMinter() public {
+        vm.startPrank(bob);
+        stakingToken = StakingToken(staking.getTokenAddress());
+        vm.expectRevert("NOT OWNER");
+        stakingToken.mint(bob, 10);
+    }
+
     /// @notice Test bob correctly collects 10 tokens after depositing his NFT.
     function testStakeCollect() public {
         vm.prank(bob);
@@ -29,6 +36,7 @@ contract StackingNFTTest is Test {
         stakingToken = StakingToken(staking.getTokenAddress());
         assertEq(stakingToken.balanceOf(bob), 10);
     }
+    
 
     /// @notice Test bob correctly collects 20 tokens after depositing his NFT and collecting two times the rewards.
     function testStakeCollect2Days() public {

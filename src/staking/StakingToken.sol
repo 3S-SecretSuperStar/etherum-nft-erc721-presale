@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8;
+pragma solidity 0.8.13;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
@@ -14,7 +14,7 @@ contract StakingToken is ERC20 {
      * @notice Modifier that only allows the owner of the contract to call a function.
      */
     modifier onlyOwner() {
-        require(msg.sender == owner, "Not the owner");
+        require(msg.sender == owner, "NOT OWNER");
         _;
     }
 

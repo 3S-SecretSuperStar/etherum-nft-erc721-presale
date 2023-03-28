@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity 0.8.13;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
  * @dev This contract allows users to mint non-fungible tokens (NFTs) in a sequential and enumerable manner.
  */
 contract EnumerableNFT is ERC721Enumerable {
-    uint256 constant MAX_SUPPLY = 20;
+    uint256 public constant MAX_SUPPLY = 20;
 
     /**
      * @notice Initialize the ERC721Enumerable contract.

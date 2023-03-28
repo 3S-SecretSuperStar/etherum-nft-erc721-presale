@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+pragma solidity 0.8.13;
 
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -17,7 +17,7 @@ contract NFTMappingPresale is ERC721, IERC2981 {
     uint256 public constant DISCOUNT_PRICE = 8 ether;
     uint256 public constant ROYALTY_BPS = 250;
     address[] public allowList;
-    mapping(uint256 => uint256) tickets;
+    mapping(uint256 => uint256) private tickets;
 
     /**
      * @notice initializes the NFT.

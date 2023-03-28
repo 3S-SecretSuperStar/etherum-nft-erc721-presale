@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8;
+pragma solidity 0.8.13;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
@@ -8,8 +8,8 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
  * @dev A contract for counting the number of prime numbered ERC721 tokens owned by a particular address.
  */
 contract PrimeNFTCounter {
-    ERC721Enumerable nft;
-    uint256[] specialIds = [2, 3, 5, 7, 11, 13, 17, 19];
+    ERC721Enumerable private nft;
+    uint256[] private specialIds = [2, 3, 5, 7, 11, 13, 17, 19];
 
     /**
      * @dev Initializes the contract instance with the address of an existing ERC721Enumerable contract.

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+pragma solidity 0.8.13;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -61,17 +61,15 @@ contract Staking {
 
     /**
      * @dev Receives the staked NFT and sets the initial staking information.
-     * @param operator Address of the operator that initiated the transfer.
      * @param from Address of the NFT owner that initiated the transfer.
      * @param tokenId The ID of the NFT being staked.
-     * @param data Additional data that was sent with the transfer.
      * @return The selector of the onERC721Received function.
      */
     function onERC721Received(
-        address operator,
+        address,
         address from,
         uint256 tokenId,
-        bytes calldata data
+        bytes calldata
     ) external returns (bytes4) {
         require(address(nft) == msg.sender, "NOT NFT CONTRACT");
         originalOwner[tokenId].depositTime = block.timestamp;

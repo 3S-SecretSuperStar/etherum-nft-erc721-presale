@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+pragma solidity 0.8.13;
 
 import "@openzeppelin/contracts/utils/structs/BitMaps.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
@@ -20,7 +20,7 @@ contract NFTBitmapPresale is ERC721, IERC2981 {
     uint256 public constant DISCOUNT_PRICE = 800 wei;
     uint256 public constant ROYALTY_BPS = 250;
     address[] public allowList;
-    BitMaps.BitMap tickets;
+    BitMaps.BitMap private tickets;
 
     /**
      * @notice initializes the BitMap with all 10 NFTs set as available.
